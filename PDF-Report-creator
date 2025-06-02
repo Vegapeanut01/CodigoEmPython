@@ -1,0 +1,232 @@
+from fpdf import FPDF
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+df = pd.DataFrame(
+    {'feature 1': ['cat 1', 'cat 2', 'cat 3', 'cat 4'],
+     'feature 2': [400, 300, 200, 100]}
+)
+
+fig, ax = plt.subplots(1,1, figsize = (6,4))
+sns.barplot(data = df, x = 'feature 1', y = 'feature 2')
+plt.title('Chart')
+
+plt.savefig('exemplo.png', transparent=False, facecolor='white', bbox_inches='tight')
+
+'''
+#layout e lugares do texto
+
+#margem 
+m = 10
+# comprimento da página A4 é 210mm
+pw = 210 - 2 * m
+# tamanho da célula 
+ch = 50
+
+
+
+pdf = FPDF()
+pdf.add_page()
+pdf.set_font('Arial', '', 12)
+
+pdf.cell(w=0, h=ch, txt='Celula 1', border=1, ln=1)
+
+pdf.cell(w=(pw/2), h=ch, txt='Celula 2a', border=1, ln=0)
+pdf.cell(w=(pw/2), h=ch, txt='Celula 2b', border=1, ln=1)
+
+
+pdf.cell(w=(pw/3), h=ch, txt='Celula 3a', border=1, ln=0)
+pdf.cell(w=(pw/3), h=ch, txt='Celula 3b', border=1, ln=0)
+pdf.cell(w=(pw/3), h=ch, txt='Celula 3c', border=1, ln=1)
+
+pdf.cell(w=(pw/3), h=ch, txt='Celula 4a', border=1, ln=0)
+pdf.cell(w=(pw/3)*2, h=ch, txt='Celula 4b', border=1, ln=1)
+
+pdf.set_xy(x=10, y= 220) #ou usar pdf.ln(50)
+pdf.cell(w=0, h=ch, txt='Celula 5',border=1, ln=1)
+
+
+pdf.output(f'exemplo.pdf')
+'''
+
+#Cabeçalho e rodapé 
+
+#Para escrever o cabeçalho e o rodapé é preciso sobreescrever os métodos com uma classe 
+
+'''class PDF(FPDF):
+    def __init__(self):
+        super().__init__()
+    def header(self):
+        self.set_font('Arial', '', 12)
+        self.cell(0,10, 'Cabeçalho', 1,0,'C')
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial','',12)
+        self.cell(0,10, 'Rodapé', 1,0,'C')
+
+
+pdf = PDF() #instância da classe
+pdf.add_page()
+pdf.set_font('Arial','',12)
+pdf.cell(w=0, h=255, txt = "Corpo", border=1, ln= 1, align= 'C')
+
+pdf.output(f'exemplo1.pdf')
+'''
+
+#Estilizar o texto 
+'''
+pdf = FPDF()
+pdf.add_page()
+
+pdf.set_font('Arial','', 16)
+pdf.cell(w=0, h=10, txt="Texto regular", ln=1)
+
+pdf.set_font('Arial', 'B', 16)
+pdf.cell(w=0, h=10, txt='Texto em bold', ln=1)
+
+pdf.set_font('Arial', 'I', 16)
+pdf.cell(w=0, h=10, txt='Texto em itálico', ln=1)
+
+pdf.set_font('Arial','', 16) #Resetando para o normal 
+
+pdf.cell(w=0, h=10, txt='Alinhado para a Esquerda', ln=1, align='L')
+pdf.cell(w=0, h=10, txt='Alinhado para o centro', ln=1, align='C')
+pdf.cell(w=0, h=10, txt='Alinhado para a Direita', ln=1, align='R')
+
+pdf.set_fill_color(r=0, g=128, b=0)
+pdf.cell(w=0, h=10, txt='Texto com o fundo colorido', ln=1, fill=True)
+
+pdf.set_text_color(r=0, g=128, b=0)
+pdf.cell(w=0, h=10, txt='Texto com cor', ln=1)
+
+pdf.output('Exemplo2.pdf')
+'''
+
+
+#Template
+'''
+ch = 8
+class PDF(FPDF):
+    def __init__(self):
+        super().__init__()
+    def header(self):
+        self.set_font('Arial', '', 12)
+        self.cell(0, 8, 'Cabeçalho', 0, 1,'C')
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial','',12)
+        self.cell(0, 8, f'Página{self.page_no()}', 0, 0, 'C')
+
+
+pdf = PDF()
+pdf.add_page()
+pdf.set_font('Arial', 'B', 24)
+pdf.cell(w=0, h=20, txt='Título', ln=1)
+
+pdf.set_font('Arial', '', 16)
+pdf.cell(w=30, h=ch, txt='Date: ', ln=0)
+pdf.cell(w=30, h=ch, txt="01/06/2025", ln=1)
+pdf.cell(w=30, h=ch, txt='Autor: ', ln=0)
+pdf.cell(w=30, h=ch, txt='Rodrigo Henrique', ln=1)
+
+pdf.ln(ch)
+pdf.multi_cell(w=0, h=5, txt='Texto que não está muito longo')
+
+pdf.ln(ch)
+pdf.multi_cell(w=0, h=5, txt='Texto que não está muito longo')
+
+
+pdf.output(f'exemplo3.pdf')
+'''
+
+#Adicionando imagem no PDF
+'''
+ch = 8
+class PDF(FPDF):
+    def __init__(self):
+        super().__init__()
+    def header(self):
+        self.set_font('Arial', '', 12)
+        self.cell(0, 8, 'Cabeçalho', 0, 1,'C')
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial','',12)
+        self.cell(0, 8, f'Página{self.page_no()}', 0, 0, 'C')
+
+pdf = PDF()
+pdf.add_page()
+pdf.set_font('Arial', 'B', 24)
+pdf.cell(w=0, h=20, txt='Título', ln=1)
+
+pdf.set_font('Arial', '', 16)
+pdf.cell(w=30, h=ch, txt= "Date: ", ln=0)
+pdf.cell(w=30, h=ch, txt='01/01/2020', ln=1)
+pdf.cell(w=30, h=ch, txt= "Autor: ", ln=0)
+pdf.cell(w=30, h=ch, txt='Rodrigo Henrique', ln=1)
+
+
+pdf.ln(ch)
+pdf.cell(w=0, h=5, txt='Antes da imagem', ln=1)
+
+
+pdf.image('exemplo.png', x = 10, y = None, w = 100, h = 0, type = 'PNG')
+
+pdf.ln(ch)
+pdf.cell(w=0, h=5, txt='Imagem')
+
+pdf.output(f'exemplo4.pdf')
+'''
+
+
+#ADICIONANDO UM DATAFRAME COMO UMA TABELA
+ch = 8
+class PDF(FPDF):
+    def __init__(self):
+        super().__init__()
+    def header(self):
+        self.set_font('Arial', '', 12)
+        self.cell(0, 8, 'Cabeçalho', 0, 1,'C')
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial','',12)
+        self.cell(0, 8, f'Página{self.page_no()}', 0, 0, 'C')
+
+
+pdf = PDF()
+pdf.add_page()
+pdf.set_font('Arial', 'B', 24)
+pdf.cell(w=0, h=20, txt='Title', ln=1)
+
+
+pdf.set_font('Arial', '', 16)
+pdf.cell(w=30, h = ch, txt = 'Date: ', ln=0)
+pdf.cell(w=30, h = ch, txt= '01/01/2020', ln=1)
+pdf.cell(w=30, h = ch, txt = 'Autor: ', ln=0)
+pdf.cell(w=30, h = ch, txt = 'Rodrigo Henrique', ln=1)
+
+pdf.ln(ch)
+#pdf.multi_cell(w=0, h=5, txt =)
+pdf.cell(w=0, h=5, txt= "Imagem")
+pdf.image('exemplo.png', x = 10, y = None, w = 100, h = 0, type = 'PNG', link = '')
+
+pdf.ln(ch)
+#pdf.multi_cell(w=0, h=5, txt =)
+
+pdf.ln(ch)
+
+#Cabeçalho da tabela 
+
+pdf.set_font('Arial', 'B', 16)
+pdf.cell(w=40, h = ch, txt = 'Feature 1', border=1, ln=0, align='C')
+pdf.cell(w=40, h = ch, txt = 'Feature 2', border=1, ln=1, align='C')
+
+#Conteúdo 
+pdf.set_font('Arial', '', 16)
+for i in range(0, len(df)):
+    pdf.cell(w=40, h=ch, txt= df['feature 1'].iloc[i], border=1, ln=0, align='C')
+    pdf.cell(w=40, h=ch, txt=df['feature 2'].iloc[i].astype(str), border=1, ln=1, align='C')
+
+
+pdf.output(f'exemplo6.pdf')
